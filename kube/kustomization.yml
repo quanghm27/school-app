@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./frontend.yml
+  - ./ingress.yml
+configurations:
+  - kustomizeconfig.yaml
+vars:
+  - name: DOMAIN
+    objref:
+      apiVersion: v1
+      kind: ConfigMap
+      name: env-properties
+    fieldref:
+      fieldpath: data.DOMAIN
+  - name: IMAGE
+    objref:
+      apiVersion: v1
+      kind: ConfigMap
+      name: env-properties
+    fieldref:
+      fieldpath: data.IMAGE
+  - name: CI_PROJECT_PATH_SLUG
+    objref:
+      apiVersion: v1
+      kind: ConfigMap
+      name: env-properties
+    fieldref:
+      fieldpath: data.CI_PROJECT_PATH_SLUG
+  - name: CI_ENVIRONMENT_SLUG
+    objref:
+      apiVersion: v1
+      kind: ConfigMap
+      name: env-properties
+    fieldref:
+      fieldpath: data.CI_ENVIRONMENT_SLUG
+configMapGenerator:
+  - name: env-properties
+    envs:
+      - env.properties
+secretGenerator:
+  - envs:
+      - env.properties
+    name: env-secret

@@ -1,0 +1,36 @@
+diff --git a/node_modules/@nuxtjs/firebase/lib/module.js b/node_modules/@nuxtjs/firebase/lib/module.js
+index 573a616..51b7324 100644
+--- a/node_modules/@nuxtjs/firebase/lib/module.js
++++ b/node_modules/@nuxtjs/firebase/lib/module.js
+@@ -6,14 +6,17 @@ const templateUtils = require('./utils/template-utils')
+ const r = (...path) => resolve(__dirname, ...path)
+ 
+ module.exports = function (moduleOptions) {
++  const { nuxt } = this
+   const defaultOptions = {
+     injectModule: true,
+   }
+ 
++  const runtimeConfig = nuxt.options.publicRuntimeConfig && nuxt.options.publicRuntimeConfig.firebase || {}
+   const options = Object.assign(
+     defaultOptions,
+     this.options.firebase,
+-    moduleOptions
++    moduleOptions,
++    { config: runtimeConfig }
+   )
+   const currentEnv = getCurrentEnv(options)
+ 
+diff --git a/node_modules/@nuxtjs/firebase/lib/plugins/main.js b/node_modules/@nuxtjs/firebase/lib/plugins/main.js
+index e10925a..a7a58e6 100644
+--- a/node_modules/@nuxtjs/firebase/lib/plugins/main.js
++++ b/node_modules/@nuxtjs/firebase/lib/plugins/main.js
+@@ -11,6 +11,8 @@ for (const service of enabledServices) { %>
+ const appConfig = <%= serialize(options.config) %>
+ 
+ export default async (ctx, inject) => {
++  const runtimeConfig = ctx.$config && ctx.$config.firebase || {}
++  Object.assign(appConfig, runtimeConfig)
+ 
+   <%/****************************************
+   **************** LAZY MODE **************

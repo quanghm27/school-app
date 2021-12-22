@@ -1,0 +1,9 @@
+.git/
+node_modules/
+dist/
+.nuxt/
+
+
+Dockerfile
+kube
+.gitlab-ci.yml

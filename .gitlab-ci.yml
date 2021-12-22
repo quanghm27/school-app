@@ -1,0 +1,7 @@
+variables:
+  HELM_INSTALL_FLAGS: '--values ./helm/values.yaml'
+include:
+  - project: 'tripathvn/devops/gitlab-ci'
+    ref: v3.0.0
+    file:
+      - '/kube-schools-template.yml'

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-student: #3D4FA4;
+    --color-parent: #39A45A;
+    --color-teacher: #EE493D;
+    /*TODO*/
+    --color-primary: #39A45A;
+    --color-success: #56C568;
+
+    --color-error: #eb5757;
+  }
+
+  .role-student {
+    --color-primary: var(--color-student);
+  }
+
+  .role-parents {
+    --color-primary: var(--color-parent);
+  }
+
+  .role-teacher {
+    --color-primary: var(--color-teacher);
+  }
+}
+
+
+
+.icon {
+  display: inline-block;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.border-default {
+  @apply border border-solid border-gray-400
+}

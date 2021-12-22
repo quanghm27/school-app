@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nuxt-app
+  name: nuxt-deployment
+  annotations:
+    app.gitlab.com/app: $(CI_PROJECT_PATH_SLUG)
+    app.gitlab.com/env: $(CI_ENVIRONMENT_SLUG)
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        app.gitlab.com/app: $(CI_PROJECT_PATH_SLUG)
+        app.gitlab.com/env: $(CI_ENVIRONMENT_SLUG)
+
+      labels:
+        app: nuxt-app
+    spec:
+      containers:
+        - imagePullPolicy: Always
+          image: $(IMAGE)
+          name: nuxt-container
+          livenessProbe:
+            httpGet:
+              port: 80
+              path: /
+            initialDelaySeconds: 20
+          envFrom:
+            - secretRef:
+                name: env-secret
+          ports:
+            - containerPort: 80
+              protocol: TCP
+              name: http
+          env:
+            - name: PORT
+              value: "80"
+      imagePullSecrets:
+        - name: gitlab-registry
+  selector:
+    matchLabels:
+      app: nuxt-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nuxt-app
+  name: nuxt-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+      name: http
+  selector:
+    app: nuxt-app
+  type: ClusterIP
